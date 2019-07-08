@@ -55,6 +55,7 @@ configurations {
 
 dependencies {
     compile gradleApi()
+    compile 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.5-2'
     
     // moved to the beginning to be the overrider
     compile 'org.ow2.asm:asm-debug-all:5.0.3'

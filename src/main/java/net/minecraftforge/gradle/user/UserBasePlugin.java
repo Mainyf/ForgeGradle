@@ -58,6 +58,8 @@ import org.gradle.api.tasks.compile.GroovyCompile;
 import org.gradle.api.tasks.compile.JavaCompile;
 import org.gradle.api.tasks.scala.ScalaCompile;
 import org.gradle.plugins.ide.idea.model.IdeaModel;
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet;
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -951,6 +953,22 @@ public abstract class UserBasePlugin<T extends UserExtension> extends BasePlugin
             compile.dependsOn("sourceMainGroovy");
             compile.setSource(dir);
         }
+
+        // kotlin!!!
+        if (project.getPlugins().hasPlugin("kotlin"))
+        {
+            KotlinSourceSet set = (KotlinSourceSet) new DslObject(main).getConvention().getPlugins().get("kotlin");
+            DelayedFile dir = delayedFile(SOURCES_DIR + "/kotlin");
+
+            task = makeTask("sourceMainKotlin", SourceCopyTask.class);
+            task.setSource(set.getKotlin());
+            task.setOutput(dir);
+
+            KotlinCompile compile = (KotlinCompile) project.getTasks().getByName(main.getCompileTaskName("kotlin"));
+            compile.dependsOn("sourceMainKotlin");
+            compile.setSource(dir);
+        }
+
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
